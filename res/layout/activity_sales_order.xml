@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/ui_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+        <Button
+            android:id="@+id/btnBack"
+            style="@style/UiSecondaryButton"
+            android:layout_width="58dp"
+            android:layout_height="38dp"
+            android:minHeight="38dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="返回" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:text="销售单"
+            android:textColor="@color/ui_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvOrderNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:singleLine="true"
+            android:textColor="@color/ui_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/ui_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="顾客"
+            android:textColor="@color/ui_muted"
+            android:textSize="13sp" />
+        <EditText
+            android:id="@+id/edtCustomer"
+            style="@style/UiInput"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:hint="姓名（可选）"
+            android:inputType="textPersonName"
+            android:minHeight="38dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="商品明细"
+            android:textColor="@color/ui_text"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点数量修改 · 左滑删除 · 右滑返回"
+            android:textColor="@color/ui_muted"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvOrderItem"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:scrollbars="none" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/ui_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="12dp">
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ui_muted"
+            android:textSize="13sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 项 · 合计 ¥"
+            android:textColor="@color/ui_muted"
+            android:textSize="13sp" />
+        <TextView
+            android:id="@+id/tvAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/ui_price"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnFinish"
+            style="@style/UiPrimaryButton"
+            android:layout_width="86dp"
+            android:layout_height="44dp"
+            android:text="结算" />
+    </LinearLayout>
+</LinearLayout>

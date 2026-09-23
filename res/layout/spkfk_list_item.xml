@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="6dp">
+    <LinearLayout
+        android:id="@+id/cardContainer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/ui_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="8dp">
+        <TextView
+            android:id="@+id/textViewSeq"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ui_badge"
+            android:gravity="center"
+            android:textColor="@color/ui_accent"
+            android:textSize="11sp" />
+        <TextView
+            android:id="@+id/tvSpmch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/ui_text"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvCabinetNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/ui_muted"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/textViewCabinetNoSuffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="柜"
+            android:textColor="@color/ui_muted"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tvAddedQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/ui_badge"
+            android:ellipsize="end"
+            android:maxWidth="90dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:singleLine="true"
+            android:textColor="@color/ui_accent_dark"
+            android:textSize="11sp"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/tvLshj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:maxWidth="82dp"
+            android:singleLine="true"
+            android:textColor="@color/ui_price"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvPriceUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:singleLine="true"
+            android:text="/10g"
+            android:textColor="@color/ui_muted"
+            android:textSize="10sp"
+            android:visibility="gone" />
+        <Button
+            android:id="@+id/btnAddToOrder"
+            style="@style/UiPrimaryButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:contentDescription="加入销售单"
+            android:focusable="false"
+            android:minHeight="40dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="+"
+            android:textSize="22sp" />
+    </LinearLayout>
+</LinearLayout>

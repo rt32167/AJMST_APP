@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ui_card"
+    android:orientation="vertical"
+    android:padding="18dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="选择数量"
+            android:textColor="@color/ui_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnQuantityCancel"
+            style="@style/UiSecondaryButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:minHeight="38dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:text="×"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tvQuantityHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/ui_muted"
+        android:textSize="12sp" />
+    <LinearLayout
+        android:id="@+id/quantityPresetRows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" />
+    <Button
+        android:id="@+id/btnQuantityOther"
+        style="@style/UiSecondaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="12dp"
+        android:text="其他数量 · 自定义" />
+</LinearLayout>

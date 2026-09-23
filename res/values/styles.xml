@@ -1,0 +1,104 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:fontFamily">sans</item>
+    </style>
+
+    <style name="UiPageTitle">
+        <item name="android:textColor">@color/ui_text</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="UiSectionLabel">
+        <item name="android:textColor">@color/ui_muted</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="UiBodyText">
+        <item name="android:textColor">@color/ui_text</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="UiMutedText">
+        <item name="android:textColor">@color/ui_muted</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="UiPrimaryButton">
+        <item name="android:background">@drawable/ui_primary_button</item>
+        <item name="android:textColor">@color/ui_surface</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <style name="UiSecondaryButton">
+        <item name="android:background">@drawable/ui_secondary_button</item>
+        <item name="android:textColor">@color/ui_accent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">42dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style>
+
+    <style name="UiInput">
+        <item name="android:background">@drawable/ui_input</item>
+        <item name="android:textColor">@color/ui_text</item>
+        <item name="android:textColorHint">@color/ui_muted</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">14dp</item>
+        <item name="android:minHeight">46dp</item>
+    </style>
+
+    <style name="NumberInputStyle" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.55</item>
+    </style>
+    
+    
+  <style name="ResultButton" parent="@android:style/Widget.Holo.Button.Borderless.Small">
+    <item name="android:layout_width">0dip</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_weight">1</item>
+  </style>
+  <style name="ShareButton" parent="@android:style/Widget.Holo.Button.Borderless.Small">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+  
+   <style name="canvas_color">
+        <item name="android:background">#f4f4f4</item>
+    </style>
+    
+   <!-- 对话框 ,目前用于数量选择对话框-->
+   <style name="dialog" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>
