@@ -2,7 +2,6 @@ package com.ajmst.android.service;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.util.Log;
 import com.ajmst.android.R;
 import com.ajmst.android.entity.MsgQueue;
@@ -15,11 +14,11 @@ import java.util.List;
 /* JADX INFO: loaded from: classes.dex */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 15;
-    private static final String DB_PATH = String.valueOf(Environment.getExternalStorageDirectory().getPath()) + "/AJMST.db";
+    public static final String DATABASE_NAME = "AJMST.db";
     private List<Class> tableClasses;
 
     public DatabaseHelper(Context context, List<Class> tableClasses) {
-        super(context, DB_PATH, (SQLiteDatabase.CursorFactory) null, DATABASE_VERSION, R.raw.ormlite_config);
+        super(context, DATABASE_NAME, (SQLiteDatabase.CursorFactory) null, DATABASE_VERSION, R.raw.ormlite_config);
         this.tableClasses = tableClasses;
     }
 

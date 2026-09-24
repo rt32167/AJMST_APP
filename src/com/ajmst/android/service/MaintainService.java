@@ -1,13 +1,13 @@
 package com.ajmst.android.service;
 
 import android.content.Context;
+import android.net.Uri;
 import com.ajmst.android.util.DateTimeUtils;
 import com.ajmst.android.util.ExcelUtils;
 import com.ajmst.android.util.StringUtils;
 import com.ajmst.commmon.entity.AjmstMaintain;
 import com.ajmst.common.response.Response;
 import com.j256.ormlite.stmt.QueryBuilder;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,9 +18,11 @@ import jxl.Workbook;
 /* JADX INFO: loaded from: classes.dex */
 public class MaintainService extends BaseService<AjmstMaintain> {
     private static final int DEFAULT_SHEET_INDEX = 0;
+    private final Context context;
 
     public MaintainService(Context context) {
         super(context);
+        this.context = context.getApplicationContext();
     }
 
     @Override // com.ajmst.android.service.BaseService
@@ -73,12 +75,14 @@ public class MaintainService extends BaseService<AjmstMaintain> {
         return r.isOk();
     }
 
-    public boolean initData(String path) {
+    public boolean initData(Uri uri) {
         boolean result = false;
         Workbook wb = null;
+        InputStream is = null;
         try {
             try {
-                InputStream is = new FileInputStream(path);
+                is = context.getContentResolver().openInputStream(uri);
+                if (is == null) return false;
                 wb = Workbook.getWorkbook(is);
                 List<List<String>> data = ExcelUtils.getData(wb, 0);
                 clearData();
@@ -150,6 +154,14 @@ public class MaintainService extends BaseService<AjmstMaintain> {
                 }
             }
             throw th;
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

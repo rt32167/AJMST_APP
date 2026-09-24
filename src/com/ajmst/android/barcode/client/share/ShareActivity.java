@@ -16,6 +16,8 @@
 
 package com.ajmst.android.barcode.client.share;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.provider.ContactsContract;
 
 import com.ajmst.android.barcode.client.Contents;
@@ -31,7 +33,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.provider.Browser;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -48,30 +49,36 @@ public final class ShareActivity extends Activity {
 
   private static final String TAG = ShareActivity.class.getSimpleName();
 
-  private static final int PICK_BOOKMARK = 0;
   private static final int PICK_CONTACT = 1;
   private static final int PICK_APP = 2;
+  private static final int CONTACTS_PERMISSION_REQUEST = 3;
 
   private View clipboardButton;
 
   private final Button.OnClickListener contactListener = new Button.OnClickListener() {
     @Override
     public void onClick(View v) {
-      Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-      startActivityForResult(intent, PICK_CONTACT);
+      if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+        requestPermissions(new String[] { Manifest.permission.READ_CONTACTS }, CONTACTS_PERMISSION_REQUEST);
+      } else {
+        pickContact();
+      }
     }
   };
 
-  private final Button.OnClickListener bookmarkListener = new Button.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      Intent intent = new Intent(Intent.ACTION_PICK);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-      intent.setClassName(ShareActivity.this, BookmarkPickerActivity.class.getName());
-      startActivityForResult(intent, PICK_BOOKMARK);
+  private void pickContact() {
+    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+    startActivityForResult(intent, PICK_CONTACT);
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode == CONTACTS_PERMISSION_REQUEST && grantResults.length > 0
+        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      pickContact();
     }
-  };
+  }
 
   private final Button.OnClickListener appListener = new Button.OnClickListener() {
     @Override
@@ -123,7 +130,7 @@ public final class ShareActivity extends Activity {
     setContentView(R.layout.share);
 
     findViewById(R.id.share_contact_button).setOnClickListener(contactListener);
-    findViewById(R.id.share_bookmark_button).setOnClickListener(bookmarkListener);
+    findViewById(R.id.share_bookmark_button).setVisibility(View.GONE);
     findViewById(R.id.share_app_button).setOnClickListener(appListener);
     clipboardButton = findViewById(R.id.share_clipboard_button);
     clipboardButton.setOnClickListener(clipboardListener);
@@ -138,11 +145,10 @@ public final class ShareActivity extends Activity {
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    if (resultCode == RESULT_OK) {
+    if (resultCode == RESULT_OK && intent != null) {
       switch (requestCode) {
-        case PICK_BOOKMARK:
         case PICK_APP:
-          showTextAsBarcode(intent.getStringExtra(Browser.BookmarkColumns.URL));
+          showTextAsBarcode(intent.getStringExtra(Intent.EXTRA_TEXT));
           break;
         case PICK_CONTACT:
           // Data field is content://contacts/people/984

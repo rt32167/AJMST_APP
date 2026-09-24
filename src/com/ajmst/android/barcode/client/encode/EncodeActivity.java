@@ -25,15 +25,16 @@ import com.ajmst.android.barcode.client.Contents;
 import com.ajmst.android.barcode.client.FinishListener;
 import com.ajmst.android.barcode.client.Intents;
 import com.ajmst.android.R;
+import com.ajmst.android.service.SharedFileProvider;
 import com.google.zxing.WriterException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,8 +106,16 @@ public final class EncodeActivity extends Activity {
         if (intent == null) {
           return false;
         }
-        intent.putExtra(USE_VCARD_KEY, !qrCodeEncoder.isUseVCard());
-        startActivity(intent);
+        Intent restart = new Intent(this, EncodeActivity.class);
+        restart.setAction(Intents.Encode.ACTION);
+        restart.putExtra(Intents.Encode.TYPE, intent.getStringExtra(Intents.Encode.TYPE));
+        Object data = intent.getExtras() == null ? null : intent.getExtras().get(Intents.Encode.DATA);
+        if (data instanceof String) restart.putExtra(Intents.Encode.DATA, (String) data);
+        if (data instanceof Bundle) restart.putExtra(Intents.Encode.DATA, (Bundle) data);
+        restart.putExtra(Intents.Encode.FORMAT, intent.getStringExtra(Intents.Encode.FORMAT));
+        restart.putExtra(Intents.Encode.SHOW_CONTENTS, intent.getBooleanExtra(Intents.Encode.SHOW_CONTENTS, true));
+        restart.putExtra(USE_VCARD_KEY, !qrCodeEncoder.isUseVCard());
+        startActivity(restart);
         finish();
         return true;
       default:
@@ -138,14 +147,14 @@ public final class EncodeActivity extends Activity {
       return;
     }
 
-    File bsRoot = new File(Environment.getExternalStorageDirectory(), "BarcodeScanner");
-    File barcodesRoot = new File(bsRoot, "Barcodes");
-    if (!barcodesRoot.exists() && !barcodesRoot.mkdirs()) {
-      Log.w(TAG, "Couldn't make dir " + barcodesRoot);
+    File barcodeFile;
+    try {
+      barcodeFile = SharedFileProvider.sharedFile(this, makeBarcodeFileName(contents) + ".png");
+    } catch (IOException e) {
+      Log.w(TAG, "Couldn't create shared barcode file", e);
       showErrorMessage(R.string.msg_unmount_usb);
       return;
     }
-    File barcodeFile = new File(barcodesRoot, makeBarcodeFileName(contents) + ".png");
     barcodeFile.delete();
     FileOutputStream fos = null;
     try {
@@ -165,10 +174,13 @@ public final class EncodeActivity extends Activity {
       }
     }
 
-    Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+    Intent intent = new Intent(Intent.ACTION_SEND);
     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name) + " - " + encoder.getTitle());
     intent.putExtra(Intent.EXTRA_TEXT, contents);
-    intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + barcodeFile.getAbsolutePath()));
+    Uri sharedUri = SharedFileProvider.uriFor(this, barcodeFile);
+    intent.putExtra(Intent.EXTRA_STREAM, sharedUri);
+    intent.setClipData(ClipData.newRawUri("barcode", sharedUri));
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     intent.setType("image/png");
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
     startActivity(Intent.createChooser(intent, null));

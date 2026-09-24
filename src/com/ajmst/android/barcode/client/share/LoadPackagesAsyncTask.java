@@ -17,9 +17,9 @@
 package com.ajmst.android.barcode.client.share;
 
 import android.app.ListActivity;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageItemInfo;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.View;
@@ -61,9 +61,10 @@ final class LoadPackagesAsyncTask extends AsyncTask<Void,Void,List<AppInfo>> {
   protected List<AppInfo> doInBackground(Void... objects) {
     List<AppInfo> labelsPackages = new ArrayList<AppInfo>();
     PackageManager packageManager = activity.getPackageManager();
-    Iterable<ApplicationInfo> appInfos = packageManager.getInstalledApplications(0);
-    for (PackageItemInfo appInfo : appInfos) {
-      String packageName = appInfo.packageName;
+    Intent launchable = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
+    List<ResolveInfo> appInfos = packageManager.queryIntentActivities(launchable, 0);
+    for (ResolveInfo appInfo : appInfos) {
+      String packageName = appInfo.activityInfo.packageName;
       if (!isHidden(packageName)) {
         CharSequence label = appInfo.loadLabel(packageManager);
         Drawable icon = appInfo.loadIcon(packageManager);        

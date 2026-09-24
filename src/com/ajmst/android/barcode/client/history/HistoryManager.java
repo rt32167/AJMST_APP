@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteException;
 import com.ajmst.android.barcode.client.Intents;
 import com.ajmst.android.barcode.client.PreferencesActivity;
 import com.ajmst.android.barcode.client.result.ResultHandler;
+import com.ajmst.android.service.SharedFileProvider;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
@@ -31,7 +32,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -321,21 +321,17 @@ public final class HistoryManager {
     }
   }
 
-  static Uri saveHistory(String history) {
-    File bsRoot = new File(Environment.getExternalStorageDirectory(), "BarcodeScanner");
-    File historyRoot = new File(bsRoot, "History");
-    if (!historyRoot.exists() && !historyRoot.mkdirs()) {
-      Log.w(TAG, "Couldn't make dir " + historyRoot);
-      return null;
-    }
-    File historyFile = new File(historyRoot, "history-" + System.currentTimeMillis() + ".csv");
+  static Uri saveHistory(Activity activity, String history) {
     OutputStreamWriter out = null;
     try {
+      File historyFile = SharedFileProvider.sharedFile(activity, "history-" + System.currentTimeMillis() + ".csv");
       out = new OutputStreamWriter(new FileOutputStream(historyFile), Charset.forName("UTF-8"));
       out.write(history);
-      return Uri.parse("file://" + historyFile.getAbsolutePath());
+      out.close();
+      out = null;
+      return SharedFileProvider.uriFor(activity, historyFile);
     } catch (IOException ioe) {
-      Log.w(TAG, "Couldn't access file " + historyFile + " due to " + ioe);
+      Log.w(TAG, "Couldn't save history", ioe);
       return null;
     } finally {
       if (out != null) {

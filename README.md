@@ -22,7 +22,7 @@
 
 ## 构建
 
-需要 JDK 11、Android SDK Platform 19、Build Tools 33.0.2。用 Android Studio 打开此目录，或在 Windows 命令行运行：
+需要 JDK 17、Android SDK Platform 36、Build Tools 35.0.0 或更新版本。最低运行版本为 Android 11（API 30），编译和目标版本为 API 36。用 Android Studio 打开此目录，或在 Windows 命令行运行：
 
 ```bat
 gradlew.bat assembleDebug
@@ -32,8 +32,8 @@ gradlew.bat assembleDebug
 
 ## 数据库
 
-应用源码中的数据库路径为外部存储根目录下的 `AJMST.db`（旧设备上通常是 `/sdcard/AJMST.db`）。工程没有打包用户数据库。使用 `python tools/verify_database.py <数据库文件>` 可以只读检查版本与 ORM 表结构；本次提供的数据库为 `user_version=15`，5 张 ORM 表及其配置列均匹配。
+数据库现在位于应用私有目录。首次启动会提示选择旧的 `AJMST.db`（旧设备上通常是 `/sdcard/AJMST.db`）；系统文件选择器授予单文件读取权限后，应用会校验版本和商品表，并复制到私有目录，原文件保持不变。可以选择空白开始。工程没有打包用户数据库。使用 `python tools/verify_database.py <数据库文件>` 可以只读检查版本与 ORM 表结构；本次提供的数据库为 `user_version=15`，5 张 ORM 表及其配置列均匹配。
 
 ## 安装限制
 
-构建产物使用调试签名，不能直接覆盖安装签名不同的原 APK。发行版配置保留原包名 `com.ajmst.android`，调试版使用独立包名，因此不会替换原版应用及其内部数据。两个应用按源码均使用外部存储根目录的同一份 `AJMST.db`，请避免同时操作。`versionCode=2`、`versionName=2.0`、`minSdkVersion=14` 和 `targetSdkVersion=14` 与原 APK 保持一致。已验证源码编译、Gradle 打包和数据库结构；2026-09-23 已将调试版安装到 Android 16 手机，并确认首页能启动及显示商品数据。
+构建产物使用调试签名，不能直接覆盖安装签名不同的原 APK。发行版配置保留原包名 `com.ajmst.android`，调试版使用独立包名，因此不会替换原版应用及其内部数据。调试版升级安装时会保留其私有数据；原版仍使用根目录数据库。新版不再直接访问外部存储根目录，也不会修改原数据库文件。

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <string name="app_name">AJMST_Android</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="server_db_url">jdbc:jtds:sqlserver://192.168.10.100:1433;databasename=payymd</string>
-    <string name="server_db_classforname">net.sourceforge.jtds.jdbc.Driver</string>
-    <string name="server_db_uid">admin</string>
-    <string name="server_db_pwd">admin</string>
     <string name="title_activity_main_tab">MainTabActivity</string>
     <string name="title_activity_tab_main">TabMainActivity</string>
     <string name="title_activity_tab_layout1">TabLayout1Activity</string>

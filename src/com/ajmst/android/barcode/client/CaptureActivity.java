@@ -41,6 +41,8 @@ import com.google.zxing.ResultPoint;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -90,6 +92,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
   private static final long DEFAULT_INTENT_RESULT_DURATION_MS = 1500L;
   private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
+  private static final int CAMERA_PERMISSION_REQUEST = 42;
 
   private static final String[] ZXING_URLS = { "http://zxing.appspot.com/scan", "zxing://scan/" };
 
@@ -159,6 +162,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   @Override
   protected void onResume() {
     super.onResume();
+
+    if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(new String[] { Manifest.permission.CAMERA }, CAMERA_PERMISSION_REQUEST);
+      return;
+    }
 
     // CameraManager must be initialized here, not in onCreate(). This is necessary because we don't
     // want to open the camera driver and measure the screen size if we're going to show the help on
@@ -276,13 +284,25 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
     inactivityTimer.onPause();
     ambientLightManager.stop();
-    cameraManager.closeDriver();
-    if (!hasSurface) {
+    if (cameraManager != null) cameraManager.closeDriver();
+    if (cameraManager != null && !hasSurface) {
       SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
       SurfaceHolder surfaceHolder = surfaceView.getHolder();
       surfaceHolder.removeCallback(this);
     }
     super.onPause();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    if (requestCode != CAMERA_PERMISSION_REQUEST) return;
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      recreate();
+    } else {
+      Toast.makeText(this, "扫码需要相机权限", Toast.LENGTH_LONG).show();
+      finish();
+    }
   }
 
   @Override

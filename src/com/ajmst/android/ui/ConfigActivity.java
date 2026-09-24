@@ -156,7 +156,7 @@ public class ConfigActivity extends Activity {
         buttonImportMaintain.setOnClickListener(new View.OnClickListener() { // from class: com.ajmst.android.ui.ConfigActivity.4
             @Override // android.view.View.OnClickListener
             public void onClick(View v) {
-                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.setType("*/*");
                 intent.addCategory("android.intent.category.OPENABLE");
                 try {
@@ -405,22 +405,22 @@ public class ConfigActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == -1 && requestCode == 0) {
             Toast.makeText(this, "call back from file choser", 0).show();
-            String path = data.getData().getPath();
-            if (path != null && !"".equals(path)) {
+            android.net.Uri uri = data == null ? null : data.getData();
+            if (uri != null) {
                 Toast.makeText(this, "正在导入数据,请稍后", 0).show();
-                boolean result = this.maintainService.initData(path);
+                boolean result = this.maintainService.initData(uri);
                 if (result) {
                     SharedPreferences.Editor editor = this.preferencesOfMaintain.edit();
-                    editor.putString("lastPath", path);
+                    editor.putString("lastPath", uri.toString());
                     editor.putString("lastImportTime", DateTimeUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
                     editor.putInt("lastInx", 0);
                     editor.putString("lastGH", "全部");
                     editor.commit();
                     Toast.makeText(this, "导入成功", 0).show();
-                    Log.i(getClass().getName(), "导入文件(" + path + ")到数据库成功");
+                    Log.i(getClass().getName(), "导入文件(" + uri + ")到数据库成功");
                 } else {
                     Toast.makeText(this, "导入数据失败,请检查文件是否正确", 0).show();
-                    Log.e(getClass().getName(), "导入文件(" + path + ")到数据库失败");
+                    Log.e(getClass().getName(), "导入文件(" + uri + ")到数据库失败");
                 }
             }
         }
