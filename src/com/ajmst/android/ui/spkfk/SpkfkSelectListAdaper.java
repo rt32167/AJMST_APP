@@ -1,6 +1,7 @@
 package com.ajmst.android.ui.spkfk;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.ajmst.android.R;
 import com.ajmst.android.entity.AdvSpkfk;
 import com.ajmst.android.entity.SalesOrder;
 import com.ajmst.android.entity.SalesOrderItem;
+import com.ajmst.android.service.SalesOrderService;
 import com.ajmst.android.service.SpkfkService;
 import com.ajmst.android.ui.NumberInputActivity;
 
@@ -29,6 +31,8 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 	private List<AdvSpkfk> spkfks;
 	private SalesOrder salesOrder;
 	private Hashtable<String,BigDecimal> quantityInOrder;
+	private Hashtable<String,Double> amountInOrder;
+	private NumberFormat amountFormat;
 	
 	public SpkfkSelectListAdaper(Activity activity,List<AdvSpkfk> spkfks) {
 		super();
@@ -36,6 +40,9 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		this.spkfks = spkfks;
 		this.inflater = LayoutInflater.from(activity);
 		quantityInOrder = new Hashtable<String,BigDecimal>();
+		amountInOrder = new Hashtable<String,Double>();
+		amountFormat = NumberFormat.getNumberInstance();
+		amountFormat.setMaximumFractionDigits(3);
 	}
 	
 
@@ -113,6 +120,7 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		BigDecimal quantity = spkfk.getSpid() == null ? null : quantityInOrder.get(spkfk.getSpid());
 		boolean inOrder = quantity != null;
 		TextView tvAddedQuantity = (TextView)convertView.findViewById(R.id.tvAddedQuantity);
+		TextView tvAddedAmount = (TextView)convertView.findViewById(R.id.tvAddedAmount);
 		if (inOrder) {
 			String unit = spkfk.getSpbh() != null && SpkfkService.isSelfCnSp(spkfk.getSpbh()) ? "g" : spkfk.getDw();
 			if (unit == null) {
@@ -120,8 +128,11 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 			}
 			tvAddedQuantity.setText("已加" + quantity.stripTrailingZeros().toPlainString() + unit);
 			tvAddedQuantity.setVisibility(View.VISIBLE);
+			tvAddedAmount.setText("小计 ¥" + amountFormat.format(amountInOrder.get(spkfk.getSpid())));
+			tvAddedAmount.setVisibility(View.VISIBLE);
 		} else {
 			tvAddedQuantity.setVisibility(View.GONE);
+			tvAddedAmount.setVisibility(View.GONE);
 		}
 		View card = convertView.findViewById(R.id.cardContainer);
 		card.setBackgroundResource(inOrder ? R.drawable.ui_card_selected : R.drawable.ui_card);
@@ -143,6 +154,7 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 	public void setSalesOrder(SalesOrder salesOrder) {
 		this.salesOrder = salesOrder;
 		quantityInOrder.clear();
+		amountInOrder.clear();
 		if(this.salesOrder != null && salesOrder.getItems() != null){
 			for(int i = 0; i < salesOrder.getItems().size();i++){
 				SalesOrderItem item = salesOrder.getItems().get(i);
@@ -150,6 +162,9 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 					BigDecimal quantity = BigDecimal.valueOf(item.getShl());
 					BigDecimal previous = quantityInOrder.get(item.getSpid());
 					quantityInOrder.put(item.getSpid(), previous == null ? quantity : previous.add(quantity));
+					Double previousAmount = amountInOrder.get(item.getSpid());
+					double itemAmount = SalesOrderService.getItemAmount(item);
+					amountInOrder.put(item.getSpid(), previousAmount == null ? itemAmount : previousAmount + itemAmount);
 				}
 			}
 		}
