@@ -27,6 +27,8 @@
   <color name="ui_price">#2D7781</color>
   <color name="ui_hero_start">#69DCD8</color>
   <color name="ui_hero_end">#2BCB9C</color>
+  <color name="ui_arc_middle">#55D6B2</color>
+  <color name="ui_arc_end">#79DEC7</color>
   <color name="ui_aqua">#81DDE8</color>
   <color name="ui_white_soft">#E9FFFA</color>
   <color name="ui_status_bar">#078F73</color>

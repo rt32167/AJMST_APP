@@ -17,7 +17,6 @@ public class HeroHeaderLayout extends LinearLayout {
     private final Path shape = new Path();
     private final float edgeRise;
     private LinearGradient colorGradient;
-    private LinearGradient fadeGradient;
 
     public HeroHeaderLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -40,24 +39,18 @@ public class HeroHeaderLayout extends LinearLayout {
 
         colorGradient = new LinearGradient(0f, 0f, width, height,
                 new int[] {
-                        getContext().getColor(R.color.ui_aqua),
-                        getContext().getColor(R.color.ui_hero_start),
-                        getContext().getColor(R.color.ui_hero_end)
+                        getContext().getColor(R.color.ui_hero_end),
+                        getContext().getColor(R.color.ui_arc_middle),
+                        getContext().getColor(R.color.ui_arc_end)
                 }, new float[] {0f, 0.48f, 1f}, Shader.TileMode.CLAMP);
-        fadeGradient = new LinearGradient(0f, 0f, 0f, height,
-                new int[] {0x00F2FAF9, 0x00F2FAF9, 0xAFF2FAF9},
-                new float[] {0f, 0.32f, 1f}, Shader.TileMode.CLAMP);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (colorGradient == null || fadeGradient == null) {
+        if (colorGradient == null) {
             return;
         }
         paint.setShader(colorGradient);
-        canvas.drawPath(shape, paint);
-
-        paint.setShader(fadeGradient);
         canvas.drawPath(shape, paint);
         paint.setShader(null);
     }
