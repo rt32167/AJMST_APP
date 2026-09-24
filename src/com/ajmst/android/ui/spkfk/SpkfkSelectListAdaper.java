@@ -16,6 +16,11 @@ import com.ajmst.android.ui.NumberInputActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,7 +94,6 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		TextView textViewSeq = (TextView)convertView.findViewById(R.id.textViewSeq);
 		textViewSeq.setText("" + (position + 1));
 		TextView tvSpmch = (TextView)convertView.findViewById(R.id.tvSpmch);
-		tvSpmch.setText(spkfk.getSpmch());
 		TextView tvCabinetNo = (TextView)convertView.findViewById(R.id.tvCabinetNo);
 		String cabinetNo = spkfk.getGh();
 		boolean hasCabinet = cabinetNo != null && cabinetNo.length() > 0;
@@ -119,19 +123,28 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		
 		BigDecimal quantity = spkfk.getSpid() == null ? null : quantityInOrder.get(spkfk.getSpid());
 		boolean inOrder = quantity != null;
-		TextView tvAddedQuantity = (TextView)convertView.findViewById(R.id.tvAddedQuantity);
 		TextView tvAddedAmount = (TextView)convertView.findViewById(R.id.tvAddedAmount);
 		if (inOrder) {
 			String unit = spkfk.getSpbh() != null && SpkfkService.isSelfCnSp(spkfk.getSpbh()) ? "g" : spkfk.getDw();
 			if (unit == null) {
 				unit = "";
 			}
-			tvAddedQuantity.setText("已加" + quantity.stripTrailingZeros().toPlainString() + unit);
-			tvAddedQuantity.setVisibility(View.VISIBLE);
+			String name = spkfk.getSpmch() == null ? "" : spkfk.getSpmch();
+			String quantityLabel = quantity.stripTrailingZeros().toPlainString() + unit;
+			SpannableString label = new SpannableString(name + " " + quantityLabel);
+			int quantityStart = name.length() + 1;
+			label.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.ui_accent_dark)),
+					quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			label.setSpan(new RelativeSizeSpan(0.75f),
+					quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			tvSpmch.setText(label);
+			tvSpmch.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+			tvSpmch.setContentDescription(name + "，数量" + quantityLabel);
 			tvAddedAmount.setText("小计 ¥" + amountFormat.format(amountInOrder.get(spkfk.getSpid())));
 			tvAddedAmount.setVisibility(View.VISIBLE);
 		} else {
-			tvAddedQuantity.setVisibility(View.GONE);
+			tvSpmch.setText(spkfk.getSpmch());
+			tvSpmch.setEllipsize(TextUtils.TruncateAt.END);
 			tvAddedAmount.setVisibility(View.GONE);
 		}
 		View card = convertView.findViewById(R.id.cardContainer);
