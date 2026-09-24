@@ -8,3 +8,4 @@ local.properties
 *.key
 *.jks
 *.keystore
+__pycache__/

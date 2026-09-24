@@ -34,6 +34,12 @@ gradlew.bat assembleDebug
 
 数据库现在位于应用私有目录。首次启动会提示选择旧的 `AJMST.db`（旧设备上通常是 `/sdcard/AJMST.db`）；系统文件选择器授予单文件读取权限后，应用会校验版本和商品表，并复制到私有目录，原文件保持不变。可以选择空白开始。工程没有打包用户数据库。使用 `python tools/verify_database.py <数据库文件>` 可以只读检查版本与 ORM 表结构；本次提供的数据库为 `user_version=15`，5 张 ORM 表及其配置列均匹配。
 
+## ETCM 中药材资料
+
+`res/raw/etcm_herb_list_zh.json` 保存 [ETCM 2.0 中药材列表](http://www.tcmip.cn/ETCM2/front/#/browse/herb)；`res/raw/etcm_herb_basic_zh.json` 保存列表中每条中药材详情页的“基本信息”。资料使用网站的简体中文版本，保留来源链接及采集时间，不包含相关信息表、成分或网络分析。
+
+更新资料时运行 `python tools/fetch_etcm_herbs.py`。脚本先下载完整列表，再逐条获取基本信息；同一时刻只发一个请求，默认两次请求开始至少间隔 1 秒，并在 `build/etcm_fetch/` 保存断点。可以分别使用 `--phase list` 和 `--phase details`，中断后重运行会从断点继续。
+
 ## 安装限制
 
 构建产物使用调试签名，不能直接覆盖安装签名不同的原 APK。发行版配置保留原包名 `com.ajmst.android`，调试版使用独立包名，因此不会替换原版应用及其内部数据。调试版升级安装时会保留其私有数据；原版仍使用根目录数据库。新版不再直接访问外部存储根目录，也不会修改原数据库文件。
