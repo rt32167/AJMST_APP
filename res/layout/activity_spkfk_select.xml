@@ -9,15 +9,14 @@
     android:background="@color/ui_background"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.ajmst.android.ui.HeroHeaderLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ui_hero"
         android:orientation="vertical"
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
         android:paddingRight="12dp"
-        android:paddingBottom="12dp">
+        android:paddingBottom="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,7 +128,7 @@
                 android:textColor="@color/ui_text"
                 android:textSize="12sp" />
         </LinearLayout>
-    </LinearLayout>
+    </com.ajmst.android.ui.HeroHeaderLayout>
 
     <TextView
         android:id="@+id/tvResultCount"

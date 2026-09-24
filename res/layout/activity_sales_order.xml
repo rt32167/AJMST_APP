@@ -8,14 +8,14 @@
     android:background="@color/ui_background"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.ajmst.android.ui.HeroHeaderLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@drawable/ui_hero"
+        android:layout_height="62dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="12dp"
-        android:paddingRight="12dp">
+        android:paddingRight="12dp"
+        android:paddingBottom="8dp">
         <Button
             android:id="@+id/btnBack"
             android:layout_width="58dp"
@@ -46,7 +46,7 @@
             android:singleLine="true"
             android:textColor="@color/ui_accent_dark"
             android:textSize="10sp" />
-    </LinearLayout>
+    </com.ajmst.android.ui.HeroHeaderLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
