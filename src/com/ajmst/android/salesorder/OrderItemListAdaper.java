@@ -123,10 +123,14 @@ public class OrderItemListAdaper extends BaseAdapter{
 		foreground.setTranslationX(isOpen ? -52 * activity.getResources().getDisplayMetrics().density : 0);
 		Button deleteButton = (Button) convertView.findViewById(R.id.btnDeleteItem);
 		deleteButton.setVisibility(isOpen ? View.VISIBLE : View.INVISIBLE);
+		deleteButton.setEnabled(isOpen);
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((SalesOrderActivity) activity).deleteOrderItem(orderItem);
+				if (openPosition == position && position < orderItems.size()
+						&& orderItems.get(position) == orderItem) {
+					((SalesOrderActivity) activity).deleteOrderItem(orderItem);
+				}
 			}
 		});
 		return convertView;

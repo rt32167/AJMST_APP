@@ -178,6 +178,7 @@ public class OrderSwipeListView extends ListView {
         if (destination < 0f) {
             deleteButton.setVisibility(VISIBLE);
         }
+        deleteButton.setEnabled(destination < 0f);
         foreground.animate().translationX(destination).setDuration(150).withEndAction(new Runnable() {
             @Override
             public void run() {
