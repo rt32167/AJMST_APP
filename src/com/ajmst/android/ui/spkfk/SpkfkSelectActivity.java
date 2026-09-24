@@ -6,6 +6,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
@@ -450,7 +453,9 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
         amountFormat.setMaximumFractionDigits(3);
         double amount = count == 0 ? 0 : SalesOrderService.getOrderAmount(salesOrder);
         TextView tvOrderAmount = (TextView) findViewById(R.id.tvOrderAmount);
-        tvOrderAmount.setText("合计 ¥" + amountFormat.format(amount));
+        SpannableString totalLabel = new SpannableString("合计 ¥" + amountFormat.format(amount));
+        totalLabel.setSpan(new RelativeSizeSpan(0.75f), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvOrderAmount.setText(totalLabel);
         tvOrderAmount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
