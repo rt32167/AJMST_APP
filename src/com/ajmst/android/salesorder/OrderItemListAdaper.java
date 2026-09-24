@@ -51,10 +51,7 @@ public class OrderItemListAdaper extends BaseAdapter{
 	}
 
 	public void setOpenPosition(int position) {
-		if (openPosition != position) {
-			openPosition = position;
-			notifyDataSetChanged();
-		}
+		openPosition = position;
 	}
 
 
@@ -70,14 +67,15 @@ public class OrderItemListAdaper extends BaseAdapter{
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		final SalesOrderItem orderItem = orderItems.get(position);
-		convertView = inflater.inflate(R.layout.sales_order_item, null);
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.sales_order_item, parent, false);
+		}
 		TextView textViewSeq = (TextView)convertView.findViewById(R.id.textViewSeq);
 		textViewSeq.setText("" + (position + 1));
 		TextView tvSpmch = (TextView)convertView.findViewById(R.id.tvSpmch);
@@ -120,6 +118,7 @@ public class OrderItemListAdaper extends BaseAdapter{
 		
 		convertView.setTag(orderItem);
 		View foreground = convertView.findViewById(R.id.orderRowForeground);
+		foreground.animate().cancel();
 		boolean isOpen = position == openPosition;
 		foreground.setTranslationX(isOpen ? -52 * activity.getResources().getDisplayMetrics().density : 0);
 		Button deleteButton = (Button) convertView.findViewById(R.id.btnDeleteItem);

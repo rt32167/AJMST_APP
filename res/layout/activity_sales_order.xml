@@ -96,12 +96,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="点右侧图标修改 · 左滑删除 · 右滑返回"
+            android:text="左滑或长按删除 · 左侧边缘右滑返回"
             android:textColor="@color/ui_muted"
             android:textSize="10sp" />
     </LinearLayout>
 
-    <ListView
+    <com.ajmst.android.salesorder.OrderSwipeListView
         android:id="@+id/lvOrderItem"
         android:layout_width="match_parent"
         android:layout_height="0dp"

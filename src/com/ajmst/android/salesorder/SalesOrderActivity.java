@@ -16,27 +16,25 @@ import com.ajmst.common.response.Response;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.GestureDetector;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SalesOrderActivity extends Activity implements android.view.GestureDetector.OnGestureListener{
+public class SalesOrderActivity extends Activity {
 	private static final int REQUEST_CODE_EDIT_QUANTITY = 6;
 	private AjmstApplication app;
 	private SalesOrder salesOrder;
 	private SalesOrderService salesOrderService;
-	private GestureDetector gestureDetector = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,38 +46,22 @@ public class SalesOrderActivity extends Activity implements android.view.Gesture
 		this.salesOrderService = new SalesOrderService(SalesOrderActivity.this);
 		final ListView lvOrderItem = (ListView) findViewById(R.id.lvOrderItem);
 		
-		gestureDetector = new GestureDetector(this, this);
-		final int swipeThreshold = Math.max(ViewConfiguration.get(this).getScaledTouchSlop() * 3,
-				(int) (48 * getResources().getDisplayMetrics().density));
-		lvOrderItem.setOnTouchListener(new OnTouchListener() {
-			private float downX;
-			private float downY;
-			private int downPosition;
-
+		lvOrderItem.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-					downX = event.getX();
-					downY = event.getY();
-					downPosition = lvOrderItem.pointToPosition((int) downX, (int) downY);
-				} else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-					float dx = event.getX() - downX;
-					float dy = event.getY() - downY;
-					if (dx > swipeThreshold && Math.abs(dx) > Math.abs(dy)) {
-						finish();
-						return true;
-					}
-					OrderItemListAdaper adapter = (OrderItemListAdaper) lvOrderItem.getAdapter();
-					if (adapter != null && downPosition >= 0
-							&& downPosition == lvOrderItem.pointToPosition((int) event.getX(), (int) event.getY())) {
-						if (Math.abs(dx) > swipeThreshold && Math.abs(dx) > Math.abs(dy)) {
-							adapter.setOpenPosition(downPosition);
-						} else if (Math.abs(dx) < swipeThreshold && adapter.getOpenPosition() != downPosition) {
-							adapter.setOpenPosition(-1);
-						}
-					}
-				}
-				return false;
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				final SalesOrderItem item = (SalesOrderItem) parent.getItemAtPosition(position);
+				((OrderSwipeListView) lvOrderItem).closeOpenRow();
+				new AlertDialog.Builder(SalesOrderActivity.this)
+						.setTitle(item.getSpmch())
+						.setItems(new String[] {"删除"}, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								deleteOrderItem(item);
+							}
+						})
+						.show();
+				return true;
 			}
 		});
 
@@ -257,51 +239,4 @@ public class SalesOrderActivity extends Activity implements android.view.Gesture
 		setResult(Activity.RESULT_OK, resultIntent);
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		return gestureDetector.onTouchEvent(event); 		// 注册手势事件
-	}
-	
-	
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		boolean switchView = false;
-		if (e2.getX() - e1.getX() > 250) {			 // 从左向右滑动（左进右出）
-			finish();
-		} else if (e2.getX() - e1.getX() < -250) {		 // 从右向左滑动（右进左出）
-
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onDown(MotionEvent arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
-			float arg3) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }
