@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -448,13 +449,24 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
         int count = salesOrder == null || salesOrder.getItems() == null
                 ? 0 : salesOrder.getItems().size();
         Button btnViewOrder = (Button) findViewById(R.id.btnViewOrder);
-        btnViewOrder.setText("销售单 " + count + "项");
+        String countText = String.valueOf(count);
+        SpannableString orderLabel = new SpannableString("销售单 " + countText + "项");
+        int countStart = 4;
+        int countEnd = countStart + countText.length();
+        orderLabel.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.ui_accent_dark)),
+                countStart, countEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        orderLabel.setSpan(new RelativeSizeSpan(1.4f),
+                countStart, countEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        btnViewOrder.setText(orderLabel);
+        btnViewOrder.setContentDescription("销售单，已选" + countText + "项商品");
         NumberFormat amountFormat = NumberFormat.getNumberInstance();
         amountFormat.setMaximumFractionDigits(3);
         double amount = count == 0 ? 0 : SalesOrderService.getOrderAmount(salesOrder);
         TextView tvOrderAmount = (TextView) findViewById(R.id.tvOrderAmount);
         SpannableString totalLabel = new SpannableString("合计 ¥" + amountFormat.format(amount));
         totalLabel.setSpan(new RelativeSizeSpan(0.75f), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        totalLabel.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.ui_muted)),
+                0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvOrderAmount.setText(totalLabel);
         tvOrderAmount.setOnClickListener(new View.OnClickListener() {
             @Override
