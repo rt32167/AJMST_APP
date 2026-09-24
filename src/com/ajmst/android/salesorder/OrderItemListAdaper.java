@@ -88,12 +88,12 @@ public class OrderItemListAdaper extends BaseAdapter{
 		tvCabinetNo.setText(spkfk.getGh());*/
 		TextView tvLshj = (TextView)convertView.findViewById(R.id.tvLshj);
 		boolean isChineseMedicine = orderItem.getSpbh() != null && SpkfkService.isSelfCnSp(orderItem.getSpbh());
-		((TextView) convertView.findViewById(R.id.tvPriceUnit)).setText(isChineseMedicine ? "每10g" : "单价");
+		convertView.findViewById(R.id.tvPriceUnit).setVisibility(isChineseMedicine ? View.VISIBLE : View.GONE);
 		tvLshj.setText("¥" + orderItem.getLshj().toString());
 		NumberFormat amountFormat = NumberFormat.getNumberInstance();
 		amountFormat.setMaximumFractionDigits(3);
 		TextView tvItemAmount = (TextView)convertView.findViewById(R.id.tvItemAmount);
-		tvItemAmount.setText("¥" + amountFormat.format(SalesOrderService.getItemAmount(orderItem)));
+		tvItemAmount.setText("小计 ¥" + amountFormat.format(SalesOrderService.getItemAmount(orderItem)));
 		
 		String quantity = BigDecimal.valueOf(orderItem.getShl()).stripTrailingZeros().toPlainString();
 		String unit = isChineseMedicine ? "g" : orderItem.getDw();

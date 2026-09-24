@@ -42,6 +42,22 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <style name="UiListUnitPrice">
+        <item name="android:textColor">@color/ui_price</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="UiListPriceUnit">
+        <item name="android:textColor">@color/ui_muted</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="UiListSubtotal">
+        <item name="android:textColor">@color/ui_accent_dark</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
     <style name="UiPrimaryButton">
         <item name="android:background">@drawable/ui_primary_button</item>
         <item name="android:textColor">@color/ui_surface</item>
