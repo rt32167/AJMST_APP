@@ -18,19 +18,23 @@
         android:paddingBottom="8dp">
         <Button
             android:id="@+id/btnBack"
-            android:layout_width="58dp"
-            android:layout_height="38dp"
-            android:background="@drawable/ui_glass_button"
-            android:minHeight="38dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
+            android:layout_width="76dp"
+            android:layout_height="44dp"
+            android:background="@drawable/ui_back_button"
+            android:drawableLeft="@drawable/ui_back_arrow"
+            android:drawablePadding="3dp"
+            android:minHeight="44dp"
+            android:minWidth="76dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="9dp"
             android:text="返回"
             android:textColor="@color/ui_text"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:textStyle="bold" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="10dp"
             android:text="销售单"
             android:textColor="@color/ui_text"
             android:textSize="20sp"
