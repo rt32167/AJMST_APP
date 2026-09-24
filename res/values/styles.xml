@@ -15,6 +15,9 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">@color/ui_accent</item>
+        <item name="android:statusBarColor">@color/ui_status_bar</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
     <style name="UiPageTitle">

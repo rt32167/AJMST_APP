@@ -8,20 +8,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:background="@color/ui_surface"
+        android:background="@drawable/ui_hero"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
         <Button
             android:id="@+id/btnBack"
-            style="@style/UiSecondaryButton"
             android:layout_width="58dp"
             android:layout_height="38dp"
+            android:background="@drawable/ui_glass_button"
             android:minHeight="38dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:text="返回" />
+            android:text="返回"
+            android:textColor="@color/ui_text"
+            android:textSize="13sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,34 +41,38 @@
             android:ellipsize="end"
             android:gravity="right"
             android:singleLine="true"
-            android:textColor="@color/ui_muted"
-            android:textSize="11sp" />
+            android:textColor="@color/ui_accent_dark"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@color/ui_surface"
+        android:layout_height="48dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/ui_card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingLeft="12dp"
+        android:paddingRight="8dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="顾客"
             android:textColor="@color/ui_muted"
-            android:textSize="13sp" />
+            android:textSize="12sp" />
         <EditText
             android:id="@+id/edtCustomer"
             style="@style/UiInput"
             android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_marginLeft="10dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="6dp"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:hint="姓名（可选）"
             android:inputType="textPersonName"
-            android:minHeight="38dp" />
+            android:minHeight="42dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -89,7 +95,7 @@
             android:layout_height="wrap_content"
             android:text="点数量修改 · 左滑删除 · 右滑返回"
             android:textColor="@color/ui_muted"
-            android:textSize="11sp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
     <ListView
@@ -101,13 +107,15 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:paddingLeft="12dp"
+        android:paddingTop="4dp"
         android:paddingRight="12dp"
         android:scrollbars="none" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@color/ui_surface"
+        android:layout_height="68dp"
+        android:background="@drawable/ui_footer"
+        android:elevation="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
@@ -131,7 +139,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/ui_price"
+            android:textColor="@color/ui_accent_dark"
             android:textSize="21sp"
             android:textStyle="bold" />
         <Button

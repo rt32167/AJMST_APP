@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#99000000">
-<LinearLayout android:layout_width="260dp" android:layout_height="wrap_content" android:layout_gravity="center" android:background="@drawable/ui_card" android:orientation="vertical" android:padding="16dp">
+<LinearLayout android:layout_width="280dp" android:layout_height="wrap_content" android:layout_gravity="center" android:background="@drawable/ui_card" android:elevation="14dp" android:orientation="vertical" android:padding="16dp">
+    <View android:layout_width="36dp" android:layout_height="4dp" android:layout_marginBottom="12dp" android:background="@drawable/ui_dialog_accent" />
     <TextView android:id="@+id/textInputTitle" style="@style/UiPageTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="输入数量" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="horizontal">
         <EditText android:id="@+id/editTextInputNumber" style="@style/UiInput" android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1" android:focusable="false" android:gravity="right|center_vertical" android:hint="0" android:textSize="23sp" />
