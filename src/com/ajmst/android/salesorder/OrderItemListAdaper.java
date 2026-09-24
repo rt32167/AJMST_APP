@@ -96,7 +96,7 @@ public class OrderItemListAdaper extends BaseAdapter{
 		if (unit == null) {
 			unit = "";
 		}
-		tvShl.setText("数量 " + quantity + unit + "  ✎ 修改");
+		tvShl.setText(quantity + unit + "  ✎");
 		tvShl.setContentDescription("修改" + orderItem.getSpmch() + "的数量，当前" + quantity + unit);
 		tvShl.setOnClickListener(new OnClickListener() {
 			@Override

@@ -25,6 +25,7 @@ import com.ajmst.android.application.AjmstApplication;
 import com.ajmst.android.barcode.client.CaptureActivity;
 import com.ajmst.android.entity.AdvSpkfk;
 import com.ajmst.android.entity.SalesOrder;
+import com.ajmst.android.entity.SalesOrderItem;
 import com.ajmst.android.salesorder.SalesOrderActivity;
 import com.ajmst.android.service.MsgQueueService;
 import com.ajmst.android.service.SalesOrderService;
@@ -33,6 +34,7 @@ import com.ajmst.android.ui.NumberInputActivity;
 import com.ajmst.common.response.Response;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /* JADX INFO: loaded from: classes.dex */
@@ -262,13 +264,21 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
     public void addToOrderBtnClick(final int position) {
         ListView lvSpkfk = (ListView) findViewById(R.id.listViewSpkfk);
         final AdvSpkfk sp = (AdvSpkfk) lvSpkfk.getItemAtPosition(position);
+        final BigDecimal currentQuantity = getQuantityInOrder(sp.getSpid());
         final String[] quantities = {"4", "5", "6", "8", "9", "10", "12", "15", "20", "25", "30", "60"};
         final Dialog dialog = new Dialog(this, R.style.NumberInputStyle);
         dialog.setContentView(R.layout.dialog_quantity);
         boolean chineseMedicine = sp.getSpbh() != null && SpkfkService.isSelfCnSp(sp.getSpbh());
-        String unit = chineseMedicine ? "g" : sp.getDw();
+        final String unit = chineseMedicine ? "g" : sp.getDw();
+        ((TextView) dialog.findViewById(R.id.tvQuantityTitle)).setText(
+                currentQuantity == null ? "选择数量" : "修改数量");
         TextView hint = (TextView) dialog.findViewById(R.id.tvQuantityHint);
-        hint.setText(unit == null || unit.length() == 0 ? "点击常用数量，或输入其他数量" : "数量单位：" + unit);
+        if (currentQuantity == null) {
+            hint.setText(unit == null || unit.length() == 0 ? "点击常用数量，或输入其他数量" : "数量单位：" + unit);
+        } else {
+            hint.setText("当前 " + currentQuantity.stripTrailingZeros().toPlainString()
+                    + (unit == null ? "" : unit) + " · 选择新数量");
+        }
         LinearLayout rows = (LinearLayout) dialog.findViewById(R.id.quantityPresetRows);
         int gap = (int) (4 * getResources().getDisplayMetrics().density + 0.5f);
         for (int row = 0; row < 4; row++) {
@@ -296,7 +306,7 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        addItem(sp, null, quantity);
+                        saveSelectedQuantity(sp, BigDecimal.valueOf(quantity));
                     }
                 });
             }
@@ -312,7 +322,11 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(SpkfkSelectActivity.this, NumberInputActivity.class);
-                intent.putExtra(NumberInputActivity.NUMBER, "");
+                intent.putExtra(NumberInputActivity.NUMBER,
+                        currentQuantity == null ? "" : currentQuantity.stripTrailingZeros().toPlainString());
+                intent.putExtra(NumberInputActivity.TITLE,
+                        (currentQuantity == null ? "输入数量" : "修改数量")
+                                + (unit == null || unit.length() == 0 ? "" : "（" + unit + "）"));
                 intent.putExtra(NumberInputActivity.TAG, String.valueOf(position));
                 intent.putExtra(NumberInputActivity.DECIMAL_COUT, 2);
                 startActivityForResult(intent, REQUEST_CODE_GET_QUANTITY);
@@ -324,6 +338,79 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
         window.setLayout(getResources().getDisplayMetrics().widthPixels -
                 (int) (32 * getResources().getDisplayMetrics().density + 0.5f),
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private BigDecimal getQuantityInOrder(String spid) {
+        if (spid == null || salesOrder == null || salesOrder.getItems() == null) {
+            return null;
+        }
+        BigDecimal total = null;
+        for (SalesOrderItem item : salesOrder.getItems()) {
+            if (spid.equals(item.getSpid()) && item.getShl() != null) {
+                BigDecimal quantity = BigDecimal.valueOf(item.getShl());
+                total = total == null ? quantity : total.add(quantity);
+            }
+        }
+        return total;
+    }
+
+    private void saveSelectedQuantity(AdvSpkfk sp, BigDecimal quantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) <= 0
+                || quantity.stripTrailingZeros().scale() > 2
+                || Double.isInfinite(quantity.doubleValue())) {
+            Toast.makeText(this, "请输入大于0、最多两位小数的数量", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        BigDecimal currentQuantity = getQuantityInOrder(sp.getSpid());
+        if (currentQuantity == null) {
+            addItem(sp, null, quantity.doubleValue());
+            return;
+        }
+        if (currentQuantity.compareTo(quantity) == 0) {
+            return;
+        }
+        List<SalesOrderItem> items = salesOrder.getItems();
+        List<SalesOrderItem> previousItems = new ArrayList<SalesOrderItem>(items);
+        List<Double> previousQuantities = new ArrayList<Double>();
+        for (SalesOrderItem item : previousItems) {
+            previousQuantities.add(item.getShl());
+        }
+        BigDecimal change = quantity.subtract(currentQuantity);
+        if (change.compareTo(BigDecimal.ZERO) > 0) {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                SalesOrderItem item = items.get(i);
+                if (sp.getSpid().equals(item.getSpid()) && item.getShl() != null) {
+                    item.setShl(BigDecimal.valueOf(item.getShl()).add(change).doubleValue());
+                    break;
+                }
+            }
+        } else {
+            BigDecimal toRemove = change.negate();
+            for (int i = items.size() - 1; i >= 0 && toRemove.compareTo(BigDecimal.ZERO) > 0; i--) {
+                SalesOrderItem item = items.get(i);
+                if (sp.getSpid().equals(item.getSpid()) && item.getShl() != null) {
+                    BigDecimal itemQuantity = BigDecimal.valueOf(item.getShl());
+                    if (itemQuantity.compareTo(toRemove) > 0) {
+                        item.setShl(itemQuantity.subtract(toRemove).doubleValue());
+                        toRemove = BigDecimal.ZERO;
+                    } else {
+                        items.remove(i);
+                        toRemove = toRemove.subtract(itemQuantity);
+                    }
+                }
+            }
+        }
+        Response result = salesOrderService.saveOrUpdate(salesOrder);
+        if (!result.isOk()) {
+            salesOrder.setItems(previousItems);
+            for (int i = 0; i < previousItems.size(); i++) {
+                previousItems.get(i).setShl(previousQuantities.get(i));
+            }
+            Toast.makeText(this, "数量保存失败", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        refreshSpkfk();
+        Toast.makeText(this, "数量已修改为 " + quantity.stripTrailingZeros().toPlainString(), Toast.LENGTH_SHORT).show();
     }
 
     public void addItem(AdvSpkfk sp, String pihao, Integer shl) {
@@ -428,8 +515,11 @@ public class SpkfkSelectActivity extends Activity implements GestureDetector.OnG
                 if (number != null && !"".equals(number)) {
                     ListView lvSpkfk2 = (ListView) findViewById(R.id.listViewSpkfk);
                     AdvSpkfk sp = (AdvSpkfk) lvSpkfk2.getItemAtPosition(position);
-                    Double shl = Double.valueOf(number);
-                    addItem(sp, (String) null, shl);
+                    try {
+                        saveSelectedQuantity(sp, new BigDecimal(number));
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "请输入有效数量", Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else if (requestCode == 3 && resultCode == 1) {
                 AdvSpkfk sp2 = (AdvSpkfk) data.getSerializableExtra(SpkfkDetailActivity.EXTRA_NAME_SPKFK);

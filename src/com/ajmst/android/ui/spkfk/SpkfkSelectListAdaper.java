@@ -125,7 +125,10 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		}
 		View card = convertView.findViewById(R.id.cardContainer);
 		card.setBackgroundResource(inOrder ? R.drawable.ui_card_selected : R.drawable.ui_card);
-		btnAddToOrder.setText("+");
+		btnAddToOrder.setBackgroundResource(inOrder ? R.drawable.ui_edit_button : R.drawable.ui_primary_button);
+		btnAddToOrder.setTextColor(activity.getResources().getColor(inOrder ? R.color.ui_accent : R.color.ui_surface));
+		btnAddToOrder.setText(inOrder ? "✎" : "+");
+		btnAddToOrder.setContentDescription(inOrder ? "修改销售单数量" : "加入销售单");
 		
 		
 		return convertView;

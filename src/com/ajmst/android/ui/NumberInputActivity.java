@@ -5,6 +5,7 @@ import com.ajmst.android.util.StringUtils;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Color;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -24,7 +25,9 @@ public class NumberInputActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		setContentView(R.layout.activity_number_input);
+		getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
 		// 显示传入的数字
 		Intent intent = getIntent();
 		String title = intent.getStringExtra(TITLE);
