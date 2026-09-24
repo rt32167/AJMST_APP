@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ajmst.android.ui.RoundedPageLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:id="@+id/widget32"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -149,3 +152,4 @@
         android:paddingBottom="12dp"
         android:scrollbars="none" />
 </LinearLayout>
+</com.ajmst.android.ui.RoundedPageLayout>

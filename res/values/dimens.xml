@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="ui_page_corner_radius">16dp</dimen>
 
     <!-- sp -->
     <dimen name="size_title">20dip</dimen>
