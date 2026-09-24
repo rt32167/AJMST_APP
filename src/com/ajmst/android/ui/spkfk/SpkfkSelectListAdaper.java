@@ -11,16 +11,12 @@ import com.ajmst.android.entity.SalesOrder;
 import com.ajmst.android.entity.SalesOrderItem;
 import com.ajmst.android.service.SalesOrderService;
 import com.ajmst.android.service.SpkfkService;
+import com.ajmst.android.ui.ItemRowText;
 import com.ajmst.android.ui.NumberInputActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -123,6 +119,7 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 		
 		BigDecimal quantity = spkfk.getSpid() == null ? null : quantityInOrder.get(spkfk.getSpid());
 		boolean inOrder = quantity != null;
+		TextView tvSelectedQuantity = (TextView)convertView.findViewById(R.id.tvSelectedQuantity);
 		TextView tvAddedAmount = (TextView)convertView.findViewById(R.id.tvAddedAmount);
 		if (inOrder) {
 			String unit = spkfk.getSpbh() != null && SpkfkService.isSelfCnSp(spkfk.getSpbh()) ? "g" : spkfk.getDw();
@@ -131,20 +128,20 @@ public class SpkfkSelectListAdaper extends BaseAdapter{
 			}
 			String name = spkfk.getSpmch() == null ? "" : spkfk.getSpmch();
 			String quantityLabel = quantity.stripTrailingZeros().toPlainString() + unit;
-			SpannableString label = new SpannableString(name + " " + quantityLabel);
-			int quantityStart = name.length() + 1;
-			label.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.ui_accent_dark)),
-					quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			label.setSpan(new RelativeSizeSpan(0.75f),
-					quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			tvSpmch.setText(label);
-			tvSpmch.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-			tvSpmch.setContentDescription(name + "，数量" + quantityLabel);
-			tvAddedAmount.setText("小计 ¥" + amountFormat.format(amountInOrder.get(spkfk.getSpid())));
+			Double itemAmount = amountInOrder.get(spkfk.getSpid());
+			String formattedAmount = amountFormat.format(itemAmount == null ? 0 : itemAmount);
+			tvSpmch.setText(name);
+			tvSpmch.setContentDescription(name);
+			tvSelectedQuantity.setText(quantityLabel);
+			tvSelectedQuantity.setContentDescription("数量" + quantityLabel);
+			tvSelectedQuantity.setVisibility(View.VISIBLE);
+			tvAddedAmount.setText(ItemRowText.subtotal(activity, formattedAmount));
+			tvAddedAmount.setContentDescription("小计" + formattedAmount + "元");
 			tvAddedAmount.setVisibility(View.VISIBLE);
 		} else {
 			tvSpmch.setText(spkfk.getSpmch());
-			tvSpmch.setEllipsize(TextUtils.TruncateAt.END);
+			tvSpmch.setContentDescription(spkfk.getSpmch());
+			tvSelectedQuantity.setVisibility(View.GONE);
 			tvAddedAmount.setVisibility(View.GONE);
 		}
 		View card = convertView.findViewById(R.id.cardContainer);

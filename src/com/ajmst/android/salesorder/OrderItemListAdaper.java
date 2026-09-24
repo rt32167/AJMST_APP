@@ -8,13 +8,10 @@ import com.ajmst.android.R;
 import com.ajmst.android.entity.SalesOrderItem;
 import com.ajmst.android.service.SalesOrderService;
 import com.ajmst.android.service.SpkfkService;
+import com.ajmst.android.ui.ItemRowText;
 
 import android.app.Activity;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,8 +87,10 @@ public class OrderItemListAdaper extends BaseAdapter{
 		tvLshj.setText("¥" + orderItem.getLshj().toString());
 		NumberFormat amountFormat = NumberFormat.getNumberInstance();
 		amountFormat.setMaximumFractionDigits(3);
+		String formattedAmount = amountFormat.format(SalesOrderService.getItemAmount(orderItem));
 		TextView tvItemAmount = (TextView)convertView.findViewById(R.id.tvItemAmount);
-		tvItemAmount.setText("小计 ¥" + amountFormat.format(SalesOrderService.getItemAmount(orderItem)));
+		tvItemAmount.setText(ItemRowText.subtotal(activity, formattedAmount));
+		tvItemAmount.setContentDescription("小计" + formattedAmount + "元");
 		
 		String quantity = BigDecimal.valueOf(orderItem.getShl()).stripTrailingZeros().toPlainString();
 		String unit = isChineseMedicine ? "g" : orderItem.getDw();
@@ -99,14 +98,11 @@ public class OrderItemListAdaper extends BaseAdapter{
 			unit = "";
 		}
 		String name = orderItem.getSpmch() == null ? "" : orderItem.getSpmch();
-		SpannableString label = new SpannableString(name + " " + quantity + unit);
-		int quantityStart = name.length() + 1;
-		label.setSpan(new ForegroundColorSpan(activity.getResources().getColor(R.color.ui_accent_dark)),
-				quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		label.setSpan(new RelativeSizeSpan(0.75f),
-				quantityStart, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvSpmch.setText(label);
-		tvSpmch.setContentDescription(name + "，数量" + quantity + unit);
+		tvSpmch.setText(name);
+		tvSpmch.setContentDescription(name);
+		TextView tvSelectedQuantity = (TextView)convertView.findViewById(R.id.tvSelectedQuantity);
+		tvSelectedQuantity.setText(quantity + unit);
+		tvSelectedQuantity.setContentDescription("数量" + quantity + unit);
 		Button editButton = (Button) convertView.findViewById(R.id.btnEditQuantity);
 		editButton.setContentDescription("修改" + name + "的数量，当前" + quantity + unit);
 		editButton.setOnClickListener(new OnClickListener() {
