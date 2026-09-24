@@ -67,7 +67,7 @@ public class SalesOrderActivity extends Activity {
 
 		//结算按钮
 		Button btnFinish = (Button) findViewById(R.id.btnFinish);
-		Button btnBack = (Button) findViewById(R.id.btnBack);
+		View btnBack = findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
