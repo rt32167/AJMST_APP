@@ -28,7 +28,7 @@
 gradlew.bat assembleDebug
 ```
 
-构建前设置 `ANDROID_HOME`，或在本机创建未纳入版本控制的 `local.properties` 并配置 `sdk.dir`。调试 APK 输出为 `build\outputs\apk\debug\AJMST_Android_Recovered-debug.apk`。调试版包名为 `com.ajmst.android.recovered`，手机上显示“AJMST 还原版”，可与已安装的原版并存。
+构建前设置 `ANDROID_HOME`，或在本机创建未纳入版本控制的 `local.properties` 并配置 `sdk.dir`。调试 APK 输出为 `build\outputs\apk\debug\AJMST_Android_Recovered-debug.apk`。调试版包名为 `com.ajmst.android.recovered`，手机上显示“中药计价”，可与已安装的原版并存。
 
 ## 数据库
 
